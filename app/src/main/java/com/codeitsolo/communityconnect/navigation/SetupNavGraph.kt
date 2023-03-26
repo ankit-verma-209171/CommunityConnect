@@ -16,13 +16,16 @@ fun SetupNavGraph(navController: NavHostController) {
         composable(
             route = Screen.Login.route,
         ) {
-            LoginScreen()
+            LoginScreen(onGetOTPClicked = {phoneNumber ->
+                navController.navigate(Screen.Home.route + "/${phoneNumber}")
+            })
         }
 
         composable(
-            route = Screen.Home.route,
+            route = Screen.Home.route + "/{phoneNumber}",
         ) {
-            HomeScreen()
+            val phoneNumber = it.arguments?.getString("phoneNumber")
+            HomeScreen(phoneNumber)
         }
     }
 }

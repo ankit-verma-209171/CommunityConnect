@@ -11,14 +11,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(phoneNumber: String? = null) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
     ) {
         Text(
-            text = "Welcome to Community Connect! 😇",
+            text = "Welcome to Community Connect! 😇 \nYou're ${phoneNumber ?: "idk"}",
             style = MaterialTheme.typography.displaySmall,
             textAlign = TextAlign.Center
         )
