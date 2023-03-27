@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.codeitsolo.communityconnect.auth.ui.LoginScreen
+import com.codeitsolo.communityconnect.auth.ui.VerifyOtpScreen
 import com.codeitsolo.communityconnect.core.ui.HomeScreen
 
 @Composable
@@ -17,15 +18,21 @@ fun SetupNavGraph(navController: NavHostController) {
             route = Screen.Login.route,
         ) {
             LoginScreen(onGetOTPClicked = {phoneNumber ->
-                navController.navigate(Screen.Home.route + "/${phoneNumber}")
+                navController.navigate(Screen.VerifyOtp.route + "/${phoneNumber}")
             })
         }
 
         composable(
-            route = Screen.Home.route + "/{phoneNumber}",
+            route = Screen.VerifyOtp.route + "/{phoneNumber}",
         ) {
             val phoneNumber = it.arguments?.getString("phoneNumber")
-            HomeScreen(phoneNumber)
+            VerifyOtpScreen(phoneNumber)
+        }
+
+        composable(
+            route = Screen.Home.route,
+        ) {
+            HomeScreen()
         }
     }
 }
