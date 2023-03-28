@@ -5,19 +5,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.codeitsolo.communityconnect.auth.ui.LoginScreen
+import com.codeitsolo.communityconnect.auth.ui.UpdateBasicUserProfileScreen
 import com.codeitsolo.communityconnect.auth.ui.VerifyOtpScreen
 import com.codeitsolo.communityconnect.core.ui.HomeScreen
 
 @Composable
-fun SetupNavGraph(navController: NavHostController) {
+fun SetupNavGraph(
+    navController: NavHostController,
+    startDestination: String = Screen.Login.route
+) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route
+        startDestination = startDestination
     ) {
         composable(
             route = Screen.Login.route,
         ) {
-            LoginScreen(onGetOTPClicked = {phoneNumber ->
+            LoginScreen(onGetOTPClicked = { phoneNumber ->
                 navController.navigate(Screen.VerifyOtp.route + "/${phoneNumber}")
             })
         }
@@ -33,6 +37,12 @@ fun SetupNavGraph(navController: NavHostController) {
             route = Screen.Home.route,
         ) {
             HomeScreen()
+        }
+
+        composable(
+            route = Screen.UpdateBasicUserProfile.route,
+        ) {
+            UpdateBasicUserProfileScreen()
         }
     }
 }

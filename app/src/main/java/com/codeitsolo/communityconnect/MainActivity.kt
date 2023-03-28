@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -23,8 +25,9 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val userState by viewModel.userState.collectAsState()
             navController = rememberNavController()
-            CommunityConnectApp(navController = navController)
+            CommunityConnectApp(navController = navController, userState = userState)
         }
     }
 }
