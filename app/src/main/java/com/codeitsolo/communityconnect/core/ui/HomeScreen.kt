@@ -9,16 +9,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
-fun HomeScreen(phoneNumber: String? = null) {
+fun HomeScreen() {
+    val user = Firebase.auth.currentUser
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
     ) {
         Text(
-            text = "Welcome to Community Connect! 😇 \nYou're ${phoneNumber ?: "idk"}",
+            text = "Welcome to Community Connect! 😇 \nYou're ${user?.displayName ?: "idk"}",
             style = MaterialTheme.typography.displaySmall,
             textAlign = TextAlign.Center
         )

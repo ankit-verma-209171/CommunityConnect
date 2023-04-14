@@ -1,6 +1,8 @@
 package com.codeitsolo.communityconnect.auth.ui
 
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,11 +26,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.codeitsolo.communityconnect.R
+import com.codeitsolo.communityconnect.core.data.UserDetails
 import com.codeitsolo.communityconnect.utils.DatePicker
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +62,8 @@ fun UpdateBasicUserProfileScreen() {
     val photoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
     ) { uri -> imageUri = uri }
+
+    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier
@@ -117,7 +127,7 @@ fun UpdateBasicUserProfileScreen() {
             DatePicker(
                 date = dob,
                 onDateChange = { dob = it },
-                label = { Text(text = "Enter your birthdate") }
+                label = { Text(text = "Enter your birthdate $dob") }
             )
         }
 
@@ -139,7 +149,43 @@ fun UpdateBasicUserProfileScreen() {
         }
 
         item {
-            Button(onClick = {}) {
+            Button(onClick = {
+                val user = Firebase.auth.currentUser
+                val profileUpdates = userProfileChangeRequest {
+                    displayName = "$firstName $lastName"
+                    photoUri = imageUri
+                }
+                user?.run {
+                    updateProfile(profileUpdates)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d(
+                                    "TAG",
+                                    "UpdateBasicUserProfileScreen: Successful profile saved!"
+                                )
+                                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                    val userDetails = UserDetails(
+                        firstName = firstName,
+                        lastName = lastName,
+                        dob = dob,
+                        work = work,
+                        address = address
+                    )
+                    val database = FirebaseFirestore.getInstance()
+                    val collection = database.collection("userDetails")
+                    collection.add(user.uid to userDetails)
+                        .addOnSuccessListener {
+                            Log.d("TAG", "UpdateBasicUserProfileScreen: Data added to firestore")
+                        }
+                        .addOnFailureListener {
+                            Log.d("TAG", "UpdateBasicUserProfileScreen: Failed!", )
+                        }
+                }
+
+            }) {
                 Text(text = "Save Profile")
             }
         }
