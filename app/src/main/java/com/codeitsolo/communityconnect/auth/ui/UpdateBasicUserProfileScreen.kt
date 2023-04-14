@@ -26,8 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.codeitsolo.communityconnect.R
@@ -47,7 +49,7 @@ fun UpdateBasicUserProfileScreen() {
     var lastName by rememberSaveable {
         mutableStateOf("")
     }
-    var dob by rememberSaveable {
+    val dob = rememberSaveable {
         mutableStateOf("")
     }
     var work by rememberSaveable {
@@ -79,30 +81,33 @@ fun UpdateBasicUserProfileScreen() {
                 Image(
                     painter = painterResource(id = R.drawable.profile_pic),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(96.dp)
                         .clip(CircleShape)
+                        .size(96.dp)
                         .clickable {
                             photoLauncher.launch(
                                 PickVisualMediaRequest(
                                     ActivityResultContracts.PickVisualMedia.ImageOnly
                                 )
                             )
-                        })
+                        },
+                )
             } else {
                 AsyncImage(
                     model = imageUri,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(96.dp)
                         .clip(CircleShape)
+                        .size(96.dp)
                         .clickable {
                             photoLauncher.launch(
                                 PickVisualMediaRequest(
                                     ActivityResultContracts.PickVisualMedia.ImageOnly
                                 )
                             )
-                        }
+                        },
                 )
             }
         }
@@ -126,8 +131,11 @@ fun UpdateBasicUserProfileScreen() {
         item {
             DatePicker(
                 date = dob,
-                onDateChange = { dob = it },
-                label = { Text(text = "Enter your birthdate $dob") }
+                onDateChange = {
+                    dob.value = it
+                    Log.d("TAG", "UpdateBasicUserProfileScreen: $dob $it")
+                },
+                label = { Text(text = "Enter your birthdate") }
             )
         }
 
@@ -168,20 +176,21 @@ fun UpdateBasicUserProfileScreen() {
                         }
 
                     val userDetails = UserDetails(
+                        uid = user.uid,
                         firstName = firstName,
                         lastName = lastName,
-                        dob = dob,
+                        dob = dob.value,
                         work = work,
                         address = address
                     )
                     val database = FirebaseFirestore.getInstance()
                     val collection = database.collection("userDetails")
-                    collection.add(user.uid to userDetails)
+                    collection.add(userDetails)
                         .addOnSuccessListener {
-                            Log.d("TAG", "UpdateBasicUserProfileScreen: Data added to firestore")
+                            Log.d("TAG", "UpdateBasicUserProfileScreen: Data added to fire store")
                         }
                         .addOnFailureListener {
-                            Log.d("TAG", "UpdateBasicUserProfileScreen: Failed!", )
+                            Log.d("TAG", "UpdateBasicUserProfileScreen: Failed!")
                         }
                 }
 
@@ -190,4 +199,10 @@ fun UpdateBasicUserProfileScreen() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun UpdateBasicUserProfilePreview() {
+    UpdateBasicUserProfileScreen()
 }
