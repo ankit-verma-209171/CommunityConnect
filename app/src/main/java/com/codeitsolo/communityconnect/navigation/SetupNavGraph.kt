@@ -21,19 +21,23 @@ fun SetupNavGraph(
         composable(
             route = Screen.Login.route,
         ) {
-            LoginScreen(onGetOTPClicked = { phoneNumber ->
-                navController.navigate(Screen.VerifyOtp.route + "/${phoneNumber}")
+            LoginScreen(onGetOTPClicked = { phoneNumber, verificationId ->
+                navController.navigate(Screen.VerifyOtp.route + "/$phoneNumber/$verificationId")
             })
         }
 
         composable(
-            route = Screen.VerifyOtp.route + "/{phoneNumber}",
+            route = Screen.VerifyOtp.route + "/{phoneNumber}/{verificationId}",
         ) {
             val phoneNumber = it.arguments?.getString("phoneNumber")
+            val verificationId = it.arguments?.getString("verificationId")
             VerifyOtpScreen(
                 phoneNumber = phoneNumber,
+                verificationId = verificationId,
                 onVerificationSuccessful = {
-                    navController.navigate(Screen.UpdateBasicUserProfile.route)
+                    navController.navigate(Screen.UpdateBasicUserProfile.route) {
+                        popUpTo(0)
+                    }
                 },
                 onVerificationFailed = {
                     navController.popBackStack()
@@ -49,7 +53,11 @@ fun SetupNavGraph(
         composable(
             route = Screen.UpdateBasicUserProfile.route,
         ) {
-            UpdateBasicUserProfileScreen()
+            UpdateBasicUserProfileScreen {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(0)
+                }
+            }
         }
     }
 }

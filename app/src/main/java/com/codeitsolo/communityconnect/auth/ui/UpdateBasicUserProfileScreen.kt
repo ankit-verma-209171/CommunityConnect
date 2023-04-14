@@ -42,7 +42,7 @@ import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateBasicUserProfileScreen() {
+fun UpdateBasicUserProfileScreen(onUpdateProfileSuccess: () -> Unit = {}) {
     var firstName by rememberSaveable {
         mutableStateOf("")
     }
@@ -172,6 +172,7 @@ fun UpdateBasicUserProfileScreen() {
                                     "UpdateBasicUserProfileScreen: Successful profile saved!"
                                 )
                                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                                onUpdateProfileSuccess()
                             }
                         }
 

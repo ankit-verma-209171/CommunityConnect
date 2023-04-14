@@ -39,7 +39,6 @@ import com.togitech.ccp.component.getErrorStatus
 import com.togitech.ccp.data.utils.getDefaultLangCode
 import com.togitech.ccp.data.utils.getDefaultPhoneCode
 import com.togitech.ccp.data.utils.getLibCountries
-import com.togitech.ccp.data.utils.getNumberHint
 import com.togitech.ccp.transformation.PhoneNumberTransformation
 
 private var fullNumberState: String by mutableStateOf("")
@@ -82,7 +81,6 @@ fun PhoneTextField(
     phoneNumberState = textFieldValue
     countryCodeState = defaultLang
 
-
     Surface(color = color) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
             if (bottomStyle) {
@@ -117,7 +115,7 @@ fun PhoneTextField(
                         cursorColor = cursorColor
                     ),
                     visualTransformation = PhoneNumberTransformation(getLibCountries.single { it.countryCode == defaultLang }.countryCode.uppercase()),
-                    placeholder = { Text(text = stringResource(id = getNumberHint(getLibCountries.single { it.countryCode == defaultLang }.countryCode.lowercase()))) },
+                    placeholder = { Text(text = "--- --- ----") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.NumberPassword,
                         autoCorrect = true,
