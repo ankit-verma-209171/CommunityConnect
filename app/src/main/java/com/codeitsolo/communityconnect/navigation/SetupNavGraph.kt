@@ -30,7 +30,14 @@ fun SetupNavGraph(
             route = Screen.VerifyOtp.route + "/{phoneNumber}",
         ) {
             val phoneNumber = it.arguments?.getString("phoneNumber")
-            VerifyOtpScreen(phoneNumber)
+            VerifyOtpScreen(
+                phoneNumber = phoneNumber,
+                onVerificationSuccessful = {
+                    navController.navigate(Screen.UpdateBasicUserProfile.route)
+                },
+                onVerificationFailed = {
+                    navController.popBackStack()
+                })
         }
 
         composable(

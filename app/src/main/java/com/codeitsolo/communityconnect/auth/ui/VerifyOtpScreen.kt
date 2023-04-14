@@ -32,7 +32,11 @@ import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VerifyOtpScreen(phoneNumber: String? = null) {
+fun VerifyOtpScreen(
+    phoneNumber: String? = null,
+    onVerificationSuccessful: () -> Unit = {},
+    onVerificationFailed: () -> Unit = {}
+) {
     var otp by rememberSaveable { mutableStateOf("") }
     var verificationId by rememberSaveable { mutableStateOf("") }
     var message by rememberSaveable { mutableStateOf("") }
@@ -68,7 +72,9 @@ fun VerifyOtpScreen(phoneNumber: String? = null) {
                     auth = auth,
                     activity = context as Activity,
                     context = context,
-                    message = message
+                    message = message,
+                    onVerificationSuccessful = onVerificationSuccessful,
+                    onVerificationFailed = onVerificationFailed
                 )
             },
             modifier = Modifier.padding(top = 16.dp)
@@ -84,6 +90,8 @@ fun VerifyOtpScreen(phoneNumber: String? = null) {
 
         override fun onVerificationFailed(p0: FirebaseException) {
             Toast.makeText(context, "Failed verification ${p0.message}", Toast.LENGTH_SHORT).show()
+            // TODO: navigate to login screen || popup the otp screen from navigation stack
+            onVerificationFailed()
         }
 
         override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
@@ -111,12 +119,16 @@ private fun signInWitPhoneAuthCredentials(
     auth: FirebaseAuth,
     activity: Activity,
     context: Context,
-    message: String
+    message: String,
+    onVerificationSuccessful: () -> Unit = {},
+    onVerificationFailed: () -> Unit = {}
 ) {
     auth.signInWithCredential(credential)
         .addOnCompleteListener(activity) { task ->
             if (task.isSuccessful) {
                 Toast.makeText(context, "Verification successful!", Toast.LENGTH_SHORT).show()
+                // TODO: navigate to home screen
+                onVerificationSuccessful()
                 return@addOnCompleteListener
             }
 
@@ -127,6 +139,7 @@ private fun signInWitPhoneAuthCredentials(
                             "${(task.exception as FirebaseAuthInvalidCredentialsException).message}",
                     Toast.LENGTH_SHORT
                 ).show()
+                 onVerificationFailed()
             }
         }
 }
