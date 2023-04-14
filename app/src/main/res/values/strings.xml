@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CommunityConnect</string>
+    <string name="invalid_number">error</string>
 </resources>

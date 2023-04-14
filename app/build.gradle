@@ -77,6 +77,9 @@ dependencies {
 
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
-    // coil compose image
+    // coil compose image library
     implementation "io.coil-kt:coil-compose:2.1.0"
+
+    // phone input library
+    implementation 'com.github.togisoft:jetpack_compose_country_code_picker:1.1.4'
 }
