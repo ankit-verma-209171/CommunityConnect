@@ -1,11 +1,6 @@
 package com.codeitsolo.communityconnect.auth.ui
 
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,9 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -58,10 +50,6 @@ fun UpdateBasicUserProfileScreen() {
     }
     var imageUri by rememberSaveable {
         mutableStateOf<Uri?>(null)
-    }
-    val context = LocalContext.current
-    val bitmap = rememberSaveable {
-        mutableStateOf<Bitmap?>(null)
     }
     val photoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),

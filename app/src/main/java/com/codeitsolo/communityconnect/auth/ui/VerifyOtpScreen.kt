@@ -83,7 +83,7 @@ fun VerifyOtpScreen(
         }
     }
 
-    callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    callbacks = object : OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(p0: PhoneAuthCredential) {
             Toast.makeText(context, "Successful verification", Toast.LENGTH_SHORT).show()
         }
